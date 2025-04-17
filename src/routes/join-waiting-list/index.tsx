@@ -9,6 +9,18 @@ import { MotionLink } from '@/components'
 
 export const Route = createFileRoute('/join-waiting-list/')({
     component: JoinWaitingList,
+    head: () => ({
+        meta: [
+            {
+                name: 'description',
+                content: 'TraficBoost360',
+            },
+            {
+                title: "TraficBoost360 - Liste d'attente",
+                description: "Rejoindre la liste d'attente de TraficBoost360",
+            }
+        ],
+    })
 })
 
 // Validation schema with zod

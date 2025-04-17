@@ -5,6 +5,18 @@ import { useState, useEffect } from 'react'
 
 export const Route = createFileRoute('/')({
     component: ComingSoon,
+    head: () => ({
+        meta: [
+            {
+                name: 'description',
+                content: 'TraficBoost360',
+            },
+            {
+                title: 'TraficBoost360 - Bienvenue',
+                description: 'TraficBoost360 - Bienvenue',
+            }
+        ],
+    })
 })
 
 
