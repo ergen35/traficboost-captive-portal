@@ -2,6 +2,7 @@ import { MotionLink } from '@/components'
 import { createFileRoute } from '@tanstack/react-router'
 import { motion } from 'motion/react'
 import { useState, useEffect } from 'react'
+import Countdown from 'react-countdown'
 
 export const Route = createFileRoute('/')({
     component: ComingSoon,
@@ -19,7 +20,6 @@ export const Route = createFileRoute('/')({
     })
 })
 
-
 function ComingSoon() {
     const [participants, setParticipants] = useState(0)
 
@@ -33,6 +33,15 @@ function ComingSoon() {
         fetchParticipants()
     }, [])
 
+    // Countdown renderer
+    const renderer = ({ days, hours, minutes, seconds }: any) => {
+        return (
+            <div className="text-white text-2xl font-mono italic font-semibold">
+                {days}J {hours}h {minutes}min. {seconds}s
+            </div>
+        )
+    }
+
     return (
         <div className="relative flex items-center justify-center min-h-screen bg-gradient-to-br from-[#31c092] via-[#0067b0] to-[#011e7a] [view-transition-name:main-content]">
             {/* Glass effect */}
@@ -43,10 +52,21 @@ function ComingSoon() {
                 <motion.h1
                     animate={{ opacity: [0, 1], y: [-50, 0] }}
                     transition={{ duration: 0.8, ease: "easeInOut" }}
-                    className="text-4xl md:text-6xl font-bold text-white mb-6"
-                >
-                    Bienvenue sur TraficBoost360
+                    className="text-2xl md:text-2xl font-bold text-white mb-8">
+                    Bienvenue sur TraficBoost-360
                 </motion.h1>
+
+                <div>
+                    <span>Lancement dans </span>
+                    {/* Countdown */}
+                    <Countdown
+                        date={new Date("2025-05-15")} // Example: 3 days from now
+                        renderer={renderer}
+                    />
+                </div>
+
+                {/* Add spacing */}
+                <div className="my-8"></div>
 
                 {/* Call to Action Button */}
                 <MotionLink

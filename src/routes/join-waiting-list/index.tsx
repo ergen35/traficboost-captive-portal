@@ -6,6 +6,8 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useEffect, useState } from 'react'
 import { MotionLink } from '@/components'
+import { getCountries } from '@/lib'
+
 
 export const Route = createFileRoute('/join-waiting-list/')({
     component: JoinWaitingList,
@@ -32,10 +34,18 @@ const schema = z.object({
         .regex(/^\+?[1-9]\d{1,14}$/, 'Veuillez entrer un numéro de téléphone valide'),
 })
 
+
 type FormData = z.infer<typeof schema>
 
 function JoinWaitingList() {
-    const [hasJoined, setHasJoined] = useState(false)
+    const [hasJoined, setHasJoined] = useState(false);
+
+    const countriesOptions = getCountries().map((country) => {
+        return {
+            value: country.code.toString(),
+            label: `${country.emojiFlag}  ${country.name} (${country.callingCodes.map((c) => `+${c}`).join(', ')})`,
+        }
+    })
 
     useEffect(() => {
         const storedData = localStorage.getItem('traficboost_360')
@@ -52,12 +62,11 @@ function JoinWaitingList() {
         }
     }, [])
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm<FormData>({
+    const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({
         resolver: zodResolver(schema),
+        defaultValues: {
+            country: "CM"
+        }
     })
 
     const onSubmit = (data: FormData) => {
@@ -76,7 +85,7 @@ function JoinWaitingList() {
 
     if (hasJoined) {
         return (
-            <div className="relative flex items-center justify-center min-h-screen px-2 bg-gradient-to-br from-[#31c092] via-[#0067b0] to-[#011e7a]  [view-transition-name:main-content]">
+            <div className="relative flex items-center justify-center min-h-screen bg-gradient-to-br from-[#31c092] via-[#0067b0] to-[#011e7a]">
                 {/* Glass effect */}
                 <div className="absolute inset-0 bg-white/10 backdrop-blur-lg"></div>
 
@@ -127,7 +136,8 @@ function JoinWaitingList() {
                                 id="fullName"
                                 type="text"
                                 {...register('fullName')}
-                                className="mt-1 block w-full px-4 py-2 rounded-md bg-white/80 text-gray-800 focus:ring-2 focus:ring-blue-500"
+                                disabled={isSubmitting}
+                                className="mt-1 block w-full px-4 py-2 rounded-md bg-white/80 text-gray-800 focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                             />
                             {errors.fullName && (
                                 <p className="mt-1 text-sm text-red-500">{errors.fullName.message}</p>
@@ -139,17 +149,15 @@ function JoinWaitingList() {
                             <label htmlFor="country" className="block text-sm font-medium text-white">
                                 Pays
                             </label>
+
                             <select
                                 id="country"
                                 {...register('country')}
-                                className="mt-1 block w-full px-4 py-2 rounded-md bg-white/80 text-gray-800 focus:ring-2 focus:ring-blue-500"
+                                disabled={isSubmitting}
+                                className="mt-1 block w-full px-4 py-2 rounded-md bg-white/80 text-gray-800 focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
+                                {countriesOptions.map((country) => <option key={country.value} value={country.value}>{country.label}</option>)}
                                 <option value="">Sélectionnez votre pays</option>
-                                <option value="France">France</option>
-                                <option value="Belgique">Belgique</option>
-                                <option value="Suisse">Suisse</option>
-                                <option value="Canada">Canada</option>
-                                <option value="Autre">Autre</option>
                             </select>
                             {errors.country && (
                                 <p className="mt-1 text-sm text-red-500">{errors.country.message}</p>
@@ -165,7 +173,8 @@ function JoinWaitingList() {
                                 id="whatsappNumber"
                                 type="text"
                                 {...register('whatsappNumber')}
-                                className="mt-1 block w-full px-4 py-2 rounded-md bg-white/80 text-gray-800 focus:ring-2 focus:ring-blue-500"
+                                disabled={isSubmitting}
+                                className="mt-1 block w-full px-4 py-2 rounded-md bg-white/80 text-gray-800 focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                             />
                             {errors.whatsappNumber && (
                                 <p className="mt-1 text-sm text-red-500">{errors.whatsappNumber.message}</p>
@@ -175,7 +184,8 @@ function JoinWaitingList() {
                         {/* Submit Button */}
                         <button
                             type="submit"
-                            className="w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 transition"
+                            disabled={isSubmitting}
+                            className="w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             Joindre la liste d'attente
                         </button>
