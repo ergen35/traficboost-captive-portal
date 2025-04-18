@@ -56,11 +56,12 @@ function ComingSoon() {
                     Bienvenue sur TraficBoost-360
                 </motion.h1>
 
-                <div>
-                    <span>Lancement dans </span>
+                <div className='flex flex-col items-center justify-center gap-4'>
+                    <span className='text-lg text-white font-bold'>Lancement le 17/05/2025</span>
+                    <span className='text-lg text-white font-bold'> </span>
                     {/* Countdown */}
                     <Countdown
-                        date={new Date("2025-05-15")} // Example: 3 days from now
+                        date={new Date("2025-05-17")} // Example: 3 days from now
                         renderer={renderer}
                     />
                 </div>
